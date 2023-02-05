@@ -1,0 +1,85 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity >=0.5.0 <0.7.6;
+
+
+contract College_Data
+{
+
+    address owner;
+    address teacher_password;
+    constructor
+    (address _owner,
+    address tp) 
+    {
+        owner=_owner;
+        teacher_password=tp;
+    }
+
+   struct student
+   {
+       uint age;
+       uint roll_no;
+       string name;
+       string last_name;
+   }
+
+   mapping (uint =>mapping (uint=>student)) public students;
+
+   struct teacher
+   {
+       string name;
+       string lname;
+       uint tid;
+       uint age;
+   }
+
+   mapping (uint =>mapping (uint=>teacher)) public teachers;
+
+   modifier onlyprinciple()
+   {
+    require(msg.sender==owner,"Not a principle");
+    _;
+   }
+
+    modifier onlyteacher()
+   {
+    require(msg.sender==teacher_password,"Not a Teacher");
+    _;
+   }
+
+
+   function add_student
+   (uint id,
+   uint year,
+   uint _age,
+   uint _roll,
+   string memory _name,
+   string memory _lname)
+    public 
+    onlyteacher
+   {
+          students[id][year].age=_age;
+          students[id][year].name=_name;
+          students[id][year].roll_no=_roll;
+          students[id][year].last_name=_lname;    
+   }
+
+   function add_teacher
+   (uint id,
+   uint year,
+   uint _age,
+   uint _tid,
+   string memory _name,
+   string memory _lname)
+    public
+    onlyprinciple 
+   {
+          teachers[id][year].age=_age;
+          teachers[id][year].name=_name;
+          teachers[id][year].tid=_tid;
+          teachers[id][year].lname=_lname;    
+   }
+
+
+}
